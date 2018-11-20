@@ -58,15 +58,6 @@ function convertPDFToImages(filePath) {
     return pdfImage.convertFile()
 }
 
-// TODO Not working
-function uniqueList(list, genKey) {
-    const keys = list.map(genKey);
-    const uniqueList = list.filter((v, i, a) => keys.indexOf(genKey(v)) === i);
-    console.log(keys)
-    console.log(uniqueList)
-    return uniqueList
-}
-
 function ocrTextFromImage(imagePath) {
     // TODO Needed to change `tesseract.js`
     //`fs.unlink` to  fs.unlink(files[0],(err)=>{ if(err){ console.log(err); } });
@@ -103,7 +94,6 @@ function possibleDatesFromText(text){
           .filter(date => (date.value < moment() || argv.future))
         if (dateOptions.length > 0) {
             // TODO filter duplicates
-            // resolve(uniqueList(dateOptions, date => chrono.parseDate(date.value)));
             resolve(dateOptions);
         } else {
             reject("No date found")
