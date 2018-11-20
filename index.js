@@ -146,7 +146,6 @@ function prefixFileBasedOnContent(filePath) {
 
 async function prefixAllFilesBasedOnContent(filePaths) {
     for (const file in filePaths) {
-        console.log(file)
         await prefixFileBasedOnContent(filePaths[file])
     }
 }
