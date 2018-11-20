@@ -26,5 +26,4 @@ brew install tesseract imagemagick ghostscript poppler xpdf
 # To-Do
 
 - Support multiple files input
-- Support for images (currently only PDFs work)
 - Tests & sane packaging

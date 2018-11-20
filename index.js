@@ -42,11 +42,15 @@ function textFromPDF(filePath) {
           } else {
               resolve(data);
           }
-        })
-    })
+        });
+    });
 }
 
-function convertPDFToImages(filePath) {
+function convertFileToImages(filePath) {
+    if (!filePath.toLowerCase().endsWith("pdf")) {
+        return Promise.resolve([filePath]);
+    }
+
     var path = require('path-extra');
     var PDFImage = require("pdf-image").PDFImage;
     var fs = require('fs');
@@ -115,7 +119,7 @@ function promptUserForBestDate(dateOptions) {
         ])
 }
 
-function prefixPDFBasedOnContent(filePath) {
+function prefixFileBasedOnContent(filePath) {
     return textFromPDF(filePath)
         .then(possibleDatesFromText)
         .catch(error => { })
@@ -124,7 +128,7 @@ function prefixPDFBasedOnContent(filePath) {
                 return data
             } else {
                 console.log("No dates from text found. Trying OCR.")
-                return convertPDFToImages(filePath)
+                return convertFileToImages(filePath)
                     .then(images => Promise.all(images.map(ocrTextFromImage)))
                     .then(text => text.join("\n"))
                     .then(possibleDatesFromText)
@@ -140,4 +144,4 @@ function prefixPDFBasedOnContent(filePath) {
 }
 
 // TODO Implement array support
-prefixPDFBasedOnContent(argv.f[0])
+prefixFileBasedOnContent(argv.f[0])
