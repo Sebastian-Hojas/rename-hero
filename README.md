@@ -29,5 +29,5 @@ brew install tesseract imagemagick ghostscript poppler xpdf
 - NPM support
 - Remove duplicate options
 - Remove options that are derived by time only
-- Order options by likelihood (recent past)
+- Order options by likelihood (recent past, assume file creation date is more recent, ..)
 - Option to select most likely date
