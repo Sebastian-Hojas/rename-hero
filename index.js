@@ -106,13 +106,13 @@ function possibleDatesFromText(text){
     return
 }
 
-function promptUserForBestDate(dateOptions) {
+function promptUserForBestDate(dateOptions, title) {
     var inquirer = require('inquirer');
     return inquirer
         .prompt([
           {
               name: "date",
-              message: "Choose date",
+              message: "Choose date for " + title,
               type: "list",
               choices: dateOptions
           }
@@ -120,6 +120,7 @@ function promptUserForBestDate(dateOptions) {
 }
 
 function prefixFileBasedOnContent(filePath) {
+    var path = require('path-extra');
     return textFromPDF(filePath)
         .then(possibleDatesFromText)
         .catch(error => { })
@@ -127,14 +128,14 @@ function prefixFileBasedOnContent(filePath) {
             if (data) {
                 return data
             } else {
-                console.log("No dates from text found. Trying OCR.")
+                console.log("Trying OCR.")
                 return convertFileToImages(filePath)
                     .then(images => Promise.all(images.map(ocrTextFromImage)))
                     .then(text => text.join("\n"))
                     .then(possibleDatesFromText)
             }
         })
-        .then(promptUserForBestDate)
+        .then(dates => promptUserForBestDate(dates, path.base(filePath)))
         .then(answers => {
             renameFileByAppendingFormattedDate(filePath, answers['date']);
         })
@@ -143,5 +144,11 @@ function prefixFileBasedOnContent(filePath) {
         })
 }
 
-// TODO Implement array support
-prefixFileBasedOnContent(argv.f[0])
+async function prefixAllFilesBasedOnContent(filePaths) {
+    for (const file in filePaths) {
+        console.log(file)
+        await prefixFileBasedOnContent(filePaths[file])
+    }
+}
+
+prefixAllFilesBasedOnContent(argv.f)

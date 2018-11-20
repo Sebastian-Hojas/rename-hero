@@ -25,5 +25,6 @@ brew install tesseract imagemagick ghostscript poppler xpdf
 
 # To-Do
 
-- Support multiple files input
 - Tests & sane packaging
+- NPM support
+- Cancel/skip option for batch support (or custom fix)
