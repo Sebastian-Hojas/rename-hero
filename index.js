@@ -86,7 +86,9 @@ function possibleDatesFromText(text){
     return new Promise(function(resolve, reject) {
         const dateOptions = chrono.parse(text)
           .map(x => {
-              const parsedText = x.text.replace(/(\s)+/, '');
+              const parsedText = x.text.replace(/[\f\n\r\t\v\u]*/gi, '');
+              var util = require('util');
+              console.log(util.inspect(parsedText))
               const date = chrono.parseDate(x.text);
               const dateString = formattedDate(date);
               return {
@@ -108,6 +110,8 @@ function possibleDatesFromText(text){
 
 function promptUserForBestDate(dateOptions, title) {
     var inquirer = require('inquirer');
+    const skipText = "==> Skip"
+    dateOptions.push(skipText)
     return inquirer
         .prompt([
           {
@@ -117,6 +121,14 @@ function promptUserForBestDate(dateOptions, title) {
               choices: dateOptions
           }
         ])
+        .then(answers => {
+            const answer = answers["date"]
+            if ( answer && answer != skipText) {
+                return answer
+            } else {
+                throw("No date selected");
+            }
+        })
 }
 
 function prefixFileBasedOnContent(filePath) {
@@ -136,8 +148,8 @@ function prefixFileBasedOnContent(filePath) {
             }
         })
         .then(dates => promptUserForBestDate(dates, path.base(filePath)))
-        .then(answers => {
-            renameFileByAppendingFormattedDate(filePath, answers['date']);
+        .then(selectedDate => {
+            renameFileByAppendingFormattedDate(filePath, selectedDate);
         })
         .catch(error => {
             console.log("Renaming failed: " + error);

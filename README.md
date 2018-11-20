@@ -27,4 +27,3 @@ brew install tesseract imagemagick ghostscript poppler xpdf
 
 - Tests & sane packaging
 - NPM support
-- Cancel/skip option for batch support (or custom fix)
