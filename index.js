@@ -33,19 +33,6 @@ function renameFileByAppendingFormattedDate(filePath, date) {
     }
 }
 
-function textFromPDF(filePath) {
-    var pdfUtil = require('pdf-to-text');
-    return new Promise(function(resolve, reject) {
-        pdfUtil.pdfToText(filePath, function(err, data) {
-          if (err) {
-              reject(err);
-          } else {
-              resolve(data);
-          }
-        });
-    });
-}
-
 function convertFileToImages(filePath) {
     if (!filePath.toLowerCase().endsWith("pdf")) {
         return Promise.resolve([filePath]);
@@ -125,7 +112,8 @@ function promptUserForBestDate(dateOptions, title) {
 
 function prefixFileBasedOnContent(filePath) {
     var path = require('path-extra');
-    return textFromPDF(filePath)
+    const textFromImage = require('./lib/textFromImage.js')
+    return textFromImage.textFromPDF(filePath)
         .then(possibleDatesFromText)
         .catch(error => { })
         .then(data => {
