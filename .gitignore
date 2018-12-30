@@ -61,4 +61,4 @@ typings/
 .next
 
 # test files
-test
+test/bin
