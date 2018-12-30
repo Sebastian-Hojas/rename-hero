@@ -27,9 +27,14 @@ test('find two simple dates from text', t => {
                 ['22.10.2018 07:33 ', '25.10.2018 07:33 ']);
 });
 
-import { textFromPDF } from '../lib/textFromImage.js'
+import { textFromPDF, ocrTextFromImage } from '../lib/textFromImage.js'
 
 test('get simple text from PDF', async t => {
     t.regex(await textFromPDF("./test/bin/Tests_SimpleText.pdf"),
+            /\s*What\s*The\s*Heck\s*2018-02-11\s*/gi);
+});
+
+test('get simple text from PNG', async t => {
+    t.regex(await ocrTextFromImage("./test/bin/Tests_SimpleText.png"),
             /\s*What\s*The\s*Heck\s*2018-02-11\s*/gi);
 });

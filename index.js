@@ -49,23 +49,6 @@ function convertFileToImages(filePath) {
     return pdfImage.convertFile()
 }
 
-function ocrTextFromImage(imagePath) {
-    // TODO Needed to change `tesseract.js`
-    //`fs.unlink` to  fs.unlink(files[0],(err)=>{ if(err){ console.log(err); } });
-    var tesseract = require('node-tesseract');
-    return new Promise(function(resolve, reject) {
-        tesseract.process(imagePath, {}, function(err, text) {
-            if(err) {
-                reject(err)
-            } else if (text) {
-                resolve(text);
-            } else {
-                reject("No text found through OCR")
-            }
-        });
-    });
-}
-
 function possibleDatesFromText(text){
     const textToDate = require('./lib/textToDate.js');
     return new Promise(function(resolve, reject) {
@@ -122,7 +105,7 @@ function prefixFileBasedOnContent(filePath) {
             } else {
                 console.log("Trying OCR.")
                 return convertFileToImages(filePath)
-                    .then(images => Promise.all(images.map(ocrTextFromImage)))
+                    .then(images => Promise.all(images.map(textFromImage.ocrTextFromImage)))
                     .then(text => text.join("\n"))
                     .then(possibleDatesFromText)
             }
