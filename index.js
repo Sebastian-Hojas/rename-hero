@@ -80,24 +80,16 @@ function ocrTextFromImage(imagePath) {
 }
 
 function possibleDatesFromText(text){
-    var chrono = require('chrono-node');
-    var moment = require('moment');
-
+    const textToDate = require('./lib/textToDate.js');
     return new Promise(function(resolve, reject) {
-        const dateOptions = chrono.parse(text)
+        const dateOptions = textToDate.possibleDatesFromText(text)
           .map(x => {
-              const parsedText = x.text.replace(/[\f\n\r\t\v\u]*/gi, '');
-              var util = require('util');
-              console.log(util.inspect(parsedText))
-              const date = chrono.parseDate(x.text);
-              const dateString = formattedDate(date);
+              const dateString = formattedDate(x.date);
               return {
-                  'name': parsedText + " (" + dateString + ")",
-                  'value': date
+                  'name': x.text + " (" + dateString + ")",
+                  'value': x.date
               }
           })
-          // Filter dates in the future
-          .filter(date => (date.value < moment() || argv.future))
         if (dateOptions.length > 0) {
             // TODO filter duplicates
             resolve(dateOptions);
